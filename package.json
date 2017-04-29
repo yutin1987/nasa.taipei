@@ -2,7 +2,7 @@
   "name": "nasa.taipei",
   "version": "0.1.0",
   "private": true,
-  "homepage": "https://yutin1987.github.io/nasa.taipei",
+  "homepage": "http://nasa.taipei/",
   "dependencies": {
     "deep-equal": "^1.0.1",
     "gh-pages": "^0.12.0",
