@@ -1,26 +1,43 @@
 import React, { Component } from 'react';
-import ReactMapboxGl, { Layer, Feature } from "react-mapbox-gl";
+import ReactMapboxGl, { ZoomControl, ScaleControl } from "react-mapbox-gl";
 import './App.css';
 
-class App extends Component {
+const styles = {
+}
+
+export default class App extends Component {
+
+  mapbox = null;
+
+  componentDidMount() {
+    this.onReady();
+  }
+
+  onReady = () => {
+    const { map } = this.mapbox.getChildContext();
+    if (!map) {
+      setImmediate(this.onReady);
+      return;
+    }
+
+    map.flyTo({ zoom: 1 });
+  }
+
   render() {
     return (
-      <ReactMapboxGl
-        style="mapbox://styles/mapbox/streets-v8"
-        accessToken="pk.eyJ1IjoieXV0aW4xOTg3IiwiYSI6ImNqMjJtamJtazAwMG4ycW82NHR6NmF0cnUifQ.spKWmG2FYMQx_WXr9azNyw"
-        containerStyle={{
-          height: "100vh",
-          width: "100vw"
-        }}>
-          <Layer
-            type="symbol"
-            id="marker"
-            layout={{ "icon-image": "marker-15" }}>
-            <Feature coordinates={[-0.481747846041145, 51.3233379650232]}/>
-          </Layer>
-      </ReactMapboxGl>
+      <div>
+        <ReactMapboxGl
+          ref={(mapbox) => { this.mapbox = mapbox; }}
+          style="mapbox://styles/mapbox/streets-v8"
+          accessToken="pk.eyJ1IjoieXV0aW4xOTg3IiwiYSI6ImNqMjJtamJtazAwMG4ycW82NHR6NmF0cnUifQ.spKWmG2FYMQx_WXr9azNyw"
+          center={[121.5353092, 25.021611]}
+          zoom={[17]}
+          containerStyle={{ height: "100vh", width: "100vw" }}
+        >
+          <ZoomControl />
+          <ScaleControl />
+        </ReactMapboxGl>
+      </div>
     );
   }
 }
-
-export default App;
