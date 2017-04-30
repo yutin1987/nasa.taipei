@@ -1,5 +1,6 @@
+import _ from 'lodash';
 import React, { Component } from 'react';
-import ReactMapboxGl, { ZoomControl, ScaleControl, Layer, Feature, Marker } from "react-mapbox-gl";
+import ReactMapboxGl, { ZoomControl, ScaleControl, Marker } from "react-mapbox-gl";
 import location from './location.gif';
 import './App.css';
 
@@ -31,6 +32,7 @@ export default class App extends Component {
     marker: null,
     zoom: [17],
     center: [121.5353092, 25.021611],
+    tasks: [],
   }
 
   componentDidMount() {
@@ -64,8 +66,15 @@ export default class App extends Component {
     });
   }
 
+  onAddTask = () => {
+    const { marker, tasks } = this.state;
+    tasks.push(marker);
+
+    this.setState({ marker: null, tasks });
+  }
+
   render() {
-    const { zoom, center, marker } = this.state;
+    const { zoom, center, marker, tasks } = this.state;
 
     return (
       <div>
@@ -85,9 +94,9 @@ export default class App extends Component {
           {marker &&
             <Marker coordinates={marker} anchor="bottom">
               <div style={styles.marker}>
-                <button style={styles.button}><span>US$</span><span>1</span></button>
-                <button style={styles.button}><span>US$</span><span>10</span></button>
-                <button style={styles.button}><span>US$</span><span>100</span></button>
+                <button style={styles.button} onClick={this.onAddTask}><span>US$</span><span>1</span></button>
+                <button style={styles.button} onClick={this.onAddTask}><span>US$</span><span>10</span></button>
+                <button style={styles.button} onClick={this.onAddTask}><span>US$</span><span>100</span></button>
                 <img src={location} width={46} height={46} />
               </div>
             </Marker>
