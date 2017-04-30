@@ -32,7 +32,6 @@ export default class App extends Component {
     marker: null,
     zoom: [17],
     center: [121.5353092, 25.021611],
-    tasks: [],
   }
 
   componentDidMount() {
@@ -47,6 +46,21 @@ export default class App extends Component {
     }
 
     map.flyTo({ zoom: 1 });
+
+    map.addSource('pickups', {
+      type: 'geojson',
+      data: {
+        "type": "FeatureCollection",
+        "features": []
+      },
+    });
+
+    map.addLayer({
+      id: 'pickups',
+      source: 'pickups',
+      type: 'symbol',
+      layout: {'icon-image': 'campsite-15'}
+    });
   }
 
   onClick = (map: Object, event: Object) => {
@@ -67,14 +81,28 @@ export default class App extends Component {
   }
 
   onAddTask = () => {
-    const { marker, tasks } = this.state;
-    tasks.push(marker);
+    const { map } = this.mapbox.getChildContext();
+    const { marker } = this.state;
+    this.tasks.push(marker);
 
-    this.setState({ marker: null, tasks });
+    map.getSource('pickups').setData({
+        "type": "FeatureCollection",
+        "features": _.map(this.tasks, (task) =>({
+          "type": "Feature",
+          "geometry": {
+            "type": "Point",
+            "coordinates": [task.lng, task.lat],
+          },
+        }))
+      });
+
+    this.setState({ marker: null });
   }
 
+  tasks = [];
+
   render() {
-    const { zoom, center, marker, tasks } = this.state;
+    const { zoom, center, marker } = this.state;
 
     return (
       <div>
